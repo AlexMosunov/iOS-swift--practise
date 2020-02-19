@@ -13,15 +13,15 @@ class Tile {
         self.price = price
     }
     
-    func description() {
-        print("This is \(brand) tile, with height of \(sizeHeight) cm and width of \(sizeWidth) cm. It costs \(price) dollars")
+    func description() -> String {
+        return "This is \(brand) tile, with height of \(sizeHeight) cm and width of \(sizeWidth) cm. It costs \(price) dollars"
     }
 }
 
 let tile1 = Tile(brand: "Costco", sizeHeight: 24.5, sizeWidth: 10.3, price: 20.5)
 let tile2 = Tile(brand: "Superbrand", sizeHeight: 20.0, sizeWidth: 20.5, price: 32)
 
-tile1.description()
+print(tile1.description())
 tile2.description()
 
 ///////////////////////////////
@@ -54,17 +54,19 @@ let student10 = Student(surname: "Smith10", initials: "A.W.", groupNum: 2, grade
 
 var arrayOfStudents = [student1, student2, student3, student4, student5, student6, student7, student8, student9, student10]
 
-func highGraders(arr: [Student]) {
-    
+func highGraders(arr: [Student]) -> [String] {
+    var message = [String]()
     for student in arrayOfStudents {
-        if student.grades.allSatisfy({$0 >= 3}) {
-            print("\(student.surname), group number: \(student.groupNum)")
+        if student.grades.allSatisfy({$0 > 3}) {
+            message.append("\(student.surname), group number: \(student.groupNum)")
             
         }
     }
+    return message
 }
-highGraders(arr: arrayOfStudents)
 
+let arrayOfGoodStudents = highGraders(arr: arrayOfStudents)
+print(arrayOfGoodStudents)
 
 ///////////////////////////////
 // extra TASK 1
@@ -125,21 +127,39 @@ class Library {
     var arrayOfBooks = [
         Book(numOfPages: 230, author: "Tolstoy", genre: "novel"),
         Book(numOfPages: 120, author: "Dan Brown", genre: "science-fiction"),
-        Book(numOfPages: 540, author: "Mark Twayne", genre: "adventure")
+        Book(numOfPages: 540, author: "Mark Twayne", genre: "adventure"),
+        Book(numOfPages: 140, author: "Dontsova", genre: "detective"),
+        Book(numOfPages: 310, author: "Dontsova", genre: "detective")
     ]
     
     func addBook (book: Book) {
         arrayOfBooks.append(book)
     }
     
+    // delete a book by index
     func deleteBook (index: Int) {
-        arrayOfBooks.remove(at: index)
+        if index < arrayOfBooks.count - 1 && index >= 0 {
+            arrayOfBooks.remove(at: index)
+        } else {
+            print("Wrong Index")
+        }
+    }
+    
+    // delete all given books
+    func deleteBooks (books: [Book]) {
+        for book in books {
+            let index = arrayOfBooks.firstIndex{$0.author == book.author && $0.numOfPages == book.numOfPages}
+            if let i = index {
+                arrayOfBooks.remove(at: i)
+            } else {
+                print("No such books in the library!")
+            }
+            
+        }
     }
     
     func getBooks (author: String?, genre: String?) -> [Book] {
         var searchingBooks = [Book]()
-        author ?? ""
-        genre ?? ""
         
         for book in arrayOfBooks {
             if author == book.author || genre == book.genre {
@@ -169,11 +189,17 @@ myLibrary.addBook(book: Book(numOfPages: 390, author: "George Washington", genre
 myLibrary.arrayOfBooks
 myLibrary.getBooks(author: "Dan Brown", genre: nil)
 myLibrary.getBooks(author: "George Orwell", genre: "adventure")
+myLibrary.deleteBook(index: 0)
+myLibrary.arrayOfBooks
+
+// Find all Dontsova books and delete them all
+var dontsovaBooks = myLibrary.getBooks(author: "Dontsova", genre: nil)
+myLibrary.deleteBooks(books: dontsovaBooks)
+myLibrary.arrayOfBooks
 
 
 
 // extra TASK 3
-
 class Triangle {
     var side1: Double
     var side2: Double
